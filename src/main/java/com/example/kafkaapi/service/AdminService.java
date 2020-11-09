@@ -2,11 +2,8 @@ package com.example.kafkaapi.service;
 
 import com.example.kafkaapi.model.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.DeleteTopicsResult;
-import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaFuture;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,7 +14,7 @@ import java.util.Map;
 /**
  * @Author grassPrince
  * @Date 2020/11/9 14:18
- * @Description TODO
+ * @Description admin的业务类
  **/
 @Service
 @Slf4j
@@ -42,6 +39,24 @@ public class AdminService {
         return ResponseVO.success(topics);
     }
 
+    public ResponseVO createTopics(List<NewTopic> addTopics) {
+        CreateTopicsResult createTopicsResult = adminClient.createTopics(addTopics);
+
+        for(Map.Entry<String, KafkaFuture<Void>> e : createTopicsResult.values().entrySet()){
+            KafkaFuture<Void> future= e.getValue();
+            try {
+                future.get();
+                boolean success=!future.isCompletedExceptionally();
+                log.info("创建状态： {} ", success);
+
+            } catch (Exception ex) {
+                log.error("topic: {} 创建失败", ex);
+                return ResponseVO.fail("topic:创建失败, 错误信息： " + ex.getMessage());
+            }
+        }
+        return ResponseVO.success("创建成功！");
+    }
+
     public ResponseVO deleteTopics(List<String > deleteTopic) {
         DeleteTopicsResult deleteTopicsResult = adminClient.deleteTopics(deleteTopic);
 
@@ -59,4 +74,6 @@ public class AdminService {
         }
         return ResponseVO.success("删除成功！");
     }
+
+
 }

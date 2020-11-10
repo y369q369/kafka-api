@@ -30,7 +30,7 @@ public class Topic {
     private Short replicationNum = 1;
 
     /** topic配置 */
-    @ApiModelProperty(required = false, notes = "topic配置", example = "{delete.topic.enable: true}")
+    @ApiModelProperty(required = false, notes = "topic配置", dataType = "java.util.HashMap")
     private Map<String, String> configs;
 
     public static List<NewTopic> generateTopic(Topic topic) {

@@ -1,8 +1,7 @@
 spring:
   kafka:                                                                              # kafka configure
-    #    bootstrap-servers: SASL_PLAINTEXT://p-tdhsit-mg1:9092,SASL_PLAINTEXT://p-tdhsit-mg2:9092,SASL_PLAINTEXT://p-tdhsit-mg3:9092
-    bootstrap-servers: localhost:9092
-    security: false            #本地测试关闭验证， 集群中开启
+    bootstrap-servers: SASL_PLAINTEXT://172.18.9.33:9092,SASL_PLAINTEXT://172.18.9.34:9092,SASL_PLAINTEXT://172.18.9.35:9092
+    security: true
 
 
 

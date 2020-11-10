@@ -7,6 +7,7 @@ import org.apache.kafka.common.KafkaFuture;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
@@ -73,6 +74,18 @@ public class AdminService {
             }
         }
         return ResponseVO.success("删除成功！");
+    }
+
+    public ResponseVO consumerGrouperList() {
+        try {
+            ListConsumerGroupsResult listConsumerGroupsResult = adminClient.listConsumerGroups();
+            KafkaFuture<Collection<ConsumerGroupListing>> kafkaFuture = listConsumerGroupsResult.all();
+            Collection<ConsumerGroupListing> consumerGroupListings = kafkaFuture.get();
+            System.out.println(consumerGroupListings.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

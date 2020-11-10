@@ -10,6 +10,7 @@ import org.springframework.kafka.core.KafkaAdmin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @Author grassPrince
@@ -23,22 +24,23 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-//    @Value("${spring.kafka.security}")
-//    private boolean securityFlag;
+    @Value("${spring.kafka.security}")
+    private boolean securityFlag;
 
     //创建一个kafka管理类，相当于rabbitMQ的管理类rabbitAdmin,没有此bean无法自定义的使用adminClient创建topic
     @Bean
     public KafkaAdmin kafkaAdmin() {
         // 设置环境变量， 等同 java -jar -Djava.security.auth.login.config
-//        System.setProperty("java.security.auth.login.config", "classpath:jaas.conf");
-//        System.setProperty("java.security.krb5.conf", "classpath:krb5.conf");
         Map<String, Object> props = new HashMap<>();
         //配置Kafka实例的连接地址:   kafka的地址，不是zookeeper
         props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-//        if (securityFlag) {
-//            props.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
-//            props.put("sasl.kerberos.service.name", "kafka");
-//        }
+        if (securityFlag) {
+            System.setProperty("java.security.auth.login.config", "classpath:jaas.conf");
+//            Properties properties = System.getProperties();
+            System.setProperty("java.security.krb5.conf", "classpath:krb5.conf");
+            props.put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
+            props.put("sasl.kerberos.service.name", "kafka");
+        }
 
         KafkaAdmin admin = new KafkaAdmin(props);
         return admin;

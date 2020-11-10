@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,10 +35,25 @@ public class AdminController {
         return adminService.topics();
     }
 
-    // 创建topic
-    @PostMapping("topics")
-    @ApiOperation(value = "createTopics", notes = "创建topic")
-    public ResponseVO createTopics(@RequestBody List<Topic> topics) {
+    // 创建单分区，单副本数的多个topic(用,隔开的多个topic)
+    @PostMapping("singleTopics")
+    @ApiOperation(value = "createSingleTopics", notes = "创建单分区，单副本数的多个topic(用,隔开的多个topic)")
+    public ResponseVO createSingleTopics(String topics) {
+        if (topics != null) {
+            List<NewTopic> addTopics = new ArrayList<>();
+            String[] addTopicArr= topics.split(",");
+            for (String topic : addTopicArr) {
+                addTopics.add(new NewTopic(topic, 1, (short)1));
+            }
+            return adminService.createTopics(addTopics);
+        }
+        return ResponseVO.fail("待删除的topic不能为空");
+    }
+
+    // 创建多个可指定分区，指定副本数，指定配置的topic
+    @PostMapping("multiTopics")
+    @ApiOperation(value = "createMultiTopics", notes = "创建多个可指定分区，指定副本数，指定配置的topic")
+    public ResponseVO createMultiTopics(@RequestBody List<Topic> topics) {
         List<NewTopic> addTopics = Topic.generateTopic(topics);
         if (addTopics != null && addTopics.size() > 0) {
             return adminService.createTopics(addTopics);
@@ -47,6 +63,7 @@ public class AdminController {
 
     // 删除topic： 用,分隔
     @DeleteMapping("topics")
+    @ApiOperation(value = "deleteTopics", notes = "删除topic： 用,分隔")
     public ResponseVO deleteTopics(String deleteTopic) {
         if (deleteTopic != null) {
             String[] topics= deleteTopic.split(",");
@@ -55,6 +72,12 @@ public class AdminController {
         return ResponseVO.fail("待删除的topic不能为空");
     }
 
+    // 获取消费组信息
+    @GetMapping("consumerGrouperList")
+    @ApiOperation(value = "consumerGrouperList", notes = "获取消费组信息")
+    public ResponseVO consumerGrouperList() {
+        return adminService.consumerGrouperList();
+    }
 
 
 }

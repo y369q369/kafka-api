@@ -1,6 +1,0 @@
-spring:
-  kafka:                                                                              # kafka configure
-    #    bootstrap-servers: SASL_PLAINTEXT://p-tdhsit-mg1:9092,SASL_PLAINTEXT://p-tdhsit-mg2:9092,SASL_PLAINTEXT://p-tdhsit-mg3:9092
-    bootstrap-servers: localhost:9092
-    security: false
-

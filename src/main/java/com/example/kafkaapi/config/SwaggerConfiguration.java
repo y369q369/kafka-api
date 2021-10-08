@@ -25,15 +25,29 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfiguration {
 
-    @Bean(value = "client")
-    public Docket httpsTestApi() {
+    @Bean(value = "api")
+    public Docket api() {
         Docket docket=new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo())
                 //分组名称
-                .groupName("client")
+                .groupName("api")
                 .select()
                 //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("com.example.kafkaapi.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.kafkaapi.controller.api"))
+                .paths(PathSelectors.any())
+                .build();
+        return docket;
+    }
+
+    @Bean(value = "spring")
+    public Docket spring() {
+        Docket docket=new Docket(DocumentationType.OAS_30)
+                .apiInfo(apiInfo())
+                //分组名称
+                .groupName("spring")
+                .select()
+                //这里指定Controller扫描包路径
+                .apis(RequestHandlerSelectors.basePackage("com.example.kafkaapi.controller.spring"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;

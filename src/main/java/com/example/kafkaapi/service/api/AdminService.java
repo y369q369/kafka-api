@@ -1,4 +1,4 @@
-package com.example.kafkaapi.service;
+package com.example.kafkaapi.service.api;
 
 import com.example.kafkaapi.model.ResponseVO;
 import lombok.extern.slf4j.Slf4j;

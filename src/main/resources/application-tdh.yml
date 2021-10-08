@@ -1,7 +1,0 @@
-spring:
-  kafka:                                                                              # kafka configure
-    bootstrap-servers: SASL_PLAINTEXT://172.18.9.33:9092,SASL_PLAINTEXT://172.18.9.34:9092,SASL_PLAINTEXT://172.18.9.35:9092
-    security: true
-
-
-

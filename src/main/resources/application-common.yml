@@ -1,8 +1,0 @@
-spring:
-  kafka:                                                                              # kafka configure
-    bootstrap-servers: 192.168.72.161:9092
-#    bootstrap-servers: 192.168.88.128:9092
-    security: false
-
-
-

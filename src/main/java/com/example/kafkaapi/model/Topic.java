@@ -33,20 +33,21 @@ public class Topic {
     @ApiModelProperty(required = false, notes = "topic配置", dataType = "java.util.HashMap")
     private Map<String, String> configs;
 
-    public static List<NewTopic> generateTopic(Topic topic) {
-        List<Topic> topics = Arrays.asList(topic);
-        return generateTopic(topics);
+    // 处理单条topic
+    public static NewTopic generateTopic(Topic topic) {
+        NewTopic newTopic = new NewTopic(topic.getName(), topic.getPartitionNum(), topic.getReplicationNum());
+        if (topic.getConfigs() != null && topic.getConfigs().size() > 0) {
+            newTopic.configs(topic.getConfigs());
+        }
+        return newTopic;
     }
 
-    public static List<NewTopic> generateTopic(List<Topic> topics) {
+    // 处理多条topic
+    public static List<NewTopic> generateTopicList(List<Topic> topics) {
         List<NewTopic> newTopics = new ArrayList<>();
         if (topics != null && topics.size() > 0) {
             for (Topic topic : topics) {
-                NewTopic newTopic = new NewTopic(topic.getName(), topic.getPartitionNum(), topic.getReplicationNum());
-                if (topic.getConfigs() != null && topic.getConfigs().size() > 0) {
-                    newTopic.configs(topic.getConfigs());
-                }
-                newTopics.add(newTopic);
+                newTopics.add(generateTopic(topic));
             }
         }
         return newTopics;

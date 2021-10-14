@@ -7,10 +7,8 @@ import org.apache.kafka.common.KafkaFuture;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author grassPrince
@@ -77,16 +75,20 @@ public class AdminService {
     }
 
     public ResponseVO consumerGrouperList() {
+        List<String> groupIdList = null;
         try {
             ListConsumerGroupsResult listConsumerGroupsResult = adminClient.listConsumerGroups();
             KafkaFuture<Collection<ConsumerGroupListing>> kafkaFuture = listConsumerGroupsResult.all();
             Collection<ConsumerGroupListing> consumerGroupListings = kafkaFuture.get();
-            System.out.println(consumerGroupListings.toString());
+            if ( consumerGroupListings != null ) {
+                groupIdList = consumerGroupListings.stream().map(ConsumerGroupListing :: groupId).collect(Collectors.toList());
+                return ResponseVO.success(groupIdList);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取消费组失败", e);
+            return ResponseVO.fail("获取消费组失败, 错误信息： " + e.getMessage());
         }
-        return null;
+        return ResponseVO.success(groupIdList);
     }
-
 
 }

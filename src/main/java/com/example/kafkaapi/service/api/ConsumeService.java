@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @Author grassPrince
@@ -79,16 +76,21 @@ public class ConsumeService {
     // 消费数据
     public ResponseVO consume(String topic) {
 
-        List<String> list = new ArrayList<>();
+        List<Map<String, Object>> list = new ArrayList<>();
 
         // 消费者订阅的topic, 可同时订阅多个
         consumer.subscribe(Arrays.asList(topic));
 
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
 
         for (ConsumerRecord<String, String> record : records) {
             log.info("【消费数据】 partition : {}, offset : {}, key : {}, value : {}", record.partition(), record.offset(), record.key(), record.value());
-            list.add("partition : " + record.partition() + ", offset : " + record.offset() + ", key : " + record.key() + ", value : " + record.value());
+            Map<String, Object> recordMap = new HashMap<>();
+            recordMap.put("partition", record.partition());
+            recordMap.put("offset", record.offset());
+            recordMap.put("key", record.key());
+            recordMap.put("value", record.value());
+            list.add(recordMap);
         }
 
         return ResponseVO.success(list);

@@ -141,6 +141,9 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
 
+    @Value("${spring.kafka.consumer.max-poll-records}")
+    private String maxPollRecords;
+
     @Value("${spring.kafka.consumer.key-deserializer}")
     private String keyDeserializer;
 
@@ -158,6 +161,8 @@ public class KafkaConfig {
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
         // 消费的模式，从头消费
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
+        // 最大拉取数量
+        properties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
         // key 反序列化
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer);
         // value 反序列化

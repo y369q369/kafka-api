@@ -6,12 +6,13 @@ server:
 transwarp:
   kerberos:
     # 集群开启kerberos认证
-    security: true
+    security: false
 
 spring:
   kafka:
     # kafka集群的连接地址
-    bootstrap-servers: SASL_PLAINTEXT://p-tdhsit-mg1:9092,SASL_PLAINTEXT://p-tdhsit-mg2:9092,SASL_PLAINTEXT://p-tdhsit-mg3:9092
+    bootstrap-servers: 172.16.130.70:32580
+#    bootstrap-servers: SASL_PLAINTEXT://p-tdhsit-mg1:9092,SASL_PLAINTEXT://p-tdhsit-mg2:9092,SASL_PLAINTEXT://p-tdhsit-mg3:9092
     producer:
       acks: all                                                                                               # 等待应答的副本：所有
       retries: 3                                                                                              # 发送失败重试次数
@@ -21,8 +22,9 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer                                # value的序列化方式
     consumer:
       group-id: gs-test1                                                                                      # 消费组id
-      enable-auto-commit: true                                                                               # 是否自动确认offset
+      enable-auto-commit: true                                                                                # 是否自动确认offset
       auto-offset-reset: earliest                                                                             # 设置消费的模式，从头消费
+      max-poll-records: 50                                                                                    # 最大拉取数量
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer                              # key的反序列化方式
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer                            # key的反序列化方式
     security:
